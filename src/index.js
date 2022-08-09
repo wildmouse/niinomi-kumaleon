@@ -264,10 +264,21 @@ const createTextTexture = () => {
     uniforms.textureBlockSize.value = textNum;
 };
 
+/**
+ * こちらがattributesになります
+ */
+const getMetadataAttributes = () => {
+    return {
+        Text: attr.text,
+        BackgroundColor: attr.bgColor.name,
+        TileRatioOffset: attr.tileRatioOffset,
+        Dynamic: attr.dynamic,
+        Division: attr.division,
+        Divider: attr.divider > 0,
+    }
+}
+
 const createTiles = () => {
-    /**
-     * こちらがattributesになります
-     */
     attr = {
         text: random.random_choice(texts),
         textColor: hexToGL(`#ffffff`),
@@ -277,7 +288,7 @@ const createTiles = () => {
         division: random.random_int(10, 12),
         divider: random.random_bool(0.1) ? 0.8 : 0.0,
     }
-    console.log(attr)
+    console.log(getMetadataAttributes())
     uniforms = {
         time: { type: "f", value: 1.0 },
         resolution: { type: "v2", value: new THREE.Vector2() },
