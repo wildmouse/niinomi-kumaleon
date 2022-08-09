@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta property="og:image" content="art.png" />
+    <title>Title</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        .main,
+        .loading {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 0;
+            margin: 0;
+        }
+        .mainCanvas {
+            z-index: 2;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+        }
+        .loading {
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+        }
+        .loading:after {
+            font-family: sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            content: "Loading...";
+        }
+        .loading.is-loaded {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.4s linear, visibility 0.4s linear;
+        }
+        .loading.is-error:after {
+            visibility: visible !important;
+            content: "Error!!" !important;
+            opacity: 1 !important;
+            transition: none !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="loading js-loading"></div>
+<main class="main js-main">
+    <canvas class="mainCanvas js-mainCanvas"></canvas>
+</main>
+
+<script src="https://stat.neort.io/externalResource/calhb8c3p9fbkmo5vgk0.js"></script>
+<script type="module" crossorigin src="https://stat.neort.io/externalResource/calheqc3p9f2v73un81g.js"></script>
+<script src="index.js"></script>
+
+</body>
+</html>
