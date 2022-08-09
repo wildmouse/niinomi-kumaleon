@@ -15,13 +15,41 @@ const directions = [];
 const ratios = [];
 const weights = [];
 
-const pallets = [
-    "https://coolors.co/000000",
-    "https://coolors.co/c52233",
-    "https://coolors.co/5b2a86",
-    "https://coolors.co/eeba0b",
-    "https://coolors.co/1098f7",
-    "https://coolors.co/00ffc5"
+/**
+ * From coolors
+ * https://coolors.co/00ffc5
+ */
+const palettes = [
+    {
+        hexColor: "#020402",
+        glColor: {},
+        name: "Black"
+    },
+    {
+        hexColor: "#c52233",
+        glColor: {},
+        name: "Cardinal"
+    },
+    {
+        hexColor: "#5b2a86",
+        glColor: {},
+        name: "KSU Purple"
+    },
+    {
+        hexColor: "#eeba0b",
+        glColor: {},
+        name: "Orange Yellow"
+    },
+    {
+        hexColor: "#1098f7",
+        glColor: {},
+        name: "Dodger Blue"
+    },
+    {
+        hexColor: "#00ffc5",
+        glColor: {},
+        name: "Sea Green Crayola"
+    },
 ]
 const texts = [
     "コード💻で切り拓く、アート🖼の新たな地平🌅。",
@@ -139,11 +167,10 @@ const glToHex = (arr) => {
     return `#${col.getHexString()}`;
 }
 
-const getPallet = (colorId) => {
-    if (pallets.length === 0) {
-    return []
-}
-return pallets[colorId % pallets.length].split("/")[3].split("-").map(c => `#${c}`)
+const getPalette = (colorId) => {
+    const palette = palettes[colorId % palettes.length]
+    palette.glColor = hexToGL(palette.hexColor)
+    return palette
 }
 
 // TODO: Get hash from URL query string
@@ -161,7 +188,7 @@ const random = new Random(hash)
 const renderTiles = () => {
     renderer = new THREE.WebGLRenderer();
     scene = new THREE.Scene();
-    const bgColor = getTextColor(random.random_choice(attr.bgColor))
+    const bgColor = getTextColor(attr.bgColor.glColor)
     scene.background = new THREE.Color(bgColor);
     geometry = new THREE.BufferGeometry();
     geometry.setIndex(indices);
@@ -217,10 +244,10 @@ const createTextTexture = () => {
 
     const ctx = canvas.getContext("2d");
     ctx.font = `${textSize * 0.8}px 'Arial'`;
-    const bgColor = random.random_choice(attr.bgColor)
-    ctx.fillStyle = glToHex(bgColor);
+    const bgColor = attr.bgColor
+    ctx.fillStyle = bgColor.hexColor
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = getTextColor(bgColor)
+    ctx.fillStyle = getTextColor(bgColor.glColor)
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -244,7 +271,7 @@ const createTiles = () => {
     attr = {
         text: random.random_choice(texts),
         textColor: hexToGL(`#ffffff`),
-        bgColor: getPallet(random.random_int(0, pallets.length)).map(hex => hexToGL(hex)),
+        bgColor: getPalette(random.random_int(0, palettes.length)),
         tileRatioOffset: random.random_num(0.0, 0.2),
         dynamic: random.random_bool(0.1),
         division: random.random_int(10, 12),
@@ -460,7 +487,7 @@ class Tile {
                 weights.push(screenPos.x, screenPos.y);
             }
 
-            const bgColor = random.random_choice(attr.bgColor)
+            const bgColor = attr.bgColor.glColor
             for (let j = 0; j < 4; j++) {
                 index.push(this.id);
                 paddings.push(attr.divider, attr.divider);
