@@ -455,6 +455,67 @@ class Tile {
             this.draw(true);
         }
     }
+    resize(arg) {
+        this.x = arg.x;
+        this.y = arg.y;
+        this.w = arg.w;
+        this.h = arg.h;
+
+        if (this.children.length > 0) {
+            if (this.age % 2 === 0) {
+                // horizontal
+                // ||
+                const x1 = this.x;
+                const y1 = this.y;
+                const w1 = this.w * this.ratio;
+                const h1 = this.h;
+                this.children[0].resize({
+                    x: x1,
+                    y: y1,
+                    w: w1,
+                    h: h1
+                });
+
+                const x2 = x1 + w1;
+                const y2 = y1;
+                const w2 = this.w * (1 - this.ratio);
+                const h2 = this.h;
+                this.children[1].resize({
+                    x: x2,
+                    y: y2,
+                    w: w2,
+                    h: h2
+                });
+            } else {
+                // vertical
+                // ＝
+                const x1 = this.x;
+                const y1 = this.y;
+                const w1 = this.w;
+                const h1 = this.h * this.ratio;
+                this.children[0].resize({
+                    x: x1,
+                    y: y1,
+                    w: w1,
+                    h: h1
+                });
+
+                const x2 = this.x;
+                const y2 = this.y + h1;
+                const w2 = this.w;
+                const h2 = this.h * (1 - this.ratio);
+                this.children[1].resize({
+                    x: x2,
+                    y: y2,
+                    w: w2,
+                    h: h2
+                });
+            }
+        } else {
+            // apply changes to renderer
+            this.draw(true);
+        }
+    }
     draw(shouldUpdate = false) {
         this.shouldRender = true;
 
@@ -634,5 +695,14 @@ kumaleon.options = {
 
         renderer.setPixelRatio(pixelRatio)
         renderer.setSize(w, h)
+
+        if (baseTile) {
+            baseTile.resize({
+                x: -window.innerWidth / 2,
+                y: -window.innerHeight / 2,
+                w: window.innerWidth,
+                h: window.innerHeight
+            })
+        }
     },
 }
